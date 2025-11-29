@@ -10,6 +10,7 @@ import { PlayerFormComponent } from './player-form/player-form.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { LoadSeedComponent } from '../core/helpers/load-seed.component';
 
 // Material Imports
 import { MatTableModule } from '@angular/material/table';
@@ -24,6 +25,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatAccordion } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -35,7 +41,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PlayerFormComponent,
     ManageUsersComponent,
     UserFormComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    LoadSeedComponent
   ],
   imports: [
     CommonModule,
@@ -52,7 +59,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatToolbarModule,
     MatListModule,
     MatSnackBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressBarModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    MatCardModule
   ]
 })
 export class AdminModule { }

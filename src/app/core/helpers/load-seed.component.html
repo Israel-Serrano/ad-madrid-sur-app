@@ -1,0 +1,152 @@
+<div class="seed-loader-container">
+  <mat-card class="seed-card">
+    <mat-card-header>
+      <mat-card-title>🌱 Cargador de Datos de Ejemplo</mat-card-title>
+      <mat-card-subtitle>Solo para desarrollo - Carga datos de seed en Firestore</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Estadísticas -->
+      <section class="stats">
+        <h3>Datos a Cargar</h3>
+        <div class="stats-grid">
+          <div class="stat">
+            <strong>{{ getStats().teams }}</strong>
+            <span>Equipos</span>
+          </div>
+          <div class="stat">
+            <strong>{{ getStats().players }}</strong>
+            <span>Jugadores</span>
+          </div>
+          <div class="stat">
+            <strong>{{ getStats().users }}</strong>
+            <span>Usuarios</span>
+          </div>
+          <div class="stat">
+            <strong>{{ getStats().events }}</strong>
+            <span>Eventos</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Estado de Carga -->
+      <section class="status" *ngIf="isLoading">
+        <h3>Estado de Carga</h3>
+        <div class="status-list">
+          <div class="status-item" [class.success]="progress['teams'] === 'success'" 
+               [class.loading]="progress['teams'] === 'loading'" 
+               [class.error]="progress['teams'] === 'error'">
+            <span class="icon">{{ getStatusIcon(progress['teams']) }}</span>
+            <span class="label">Equipos</span>
+            <mat-progress-bar *ngIf="progress['teams'] === 'loading'" mode="indeterminate"></mat-progress-bar>
+          </div>
+
+          <div class="status-item" [class.success]="progress['players'] === 'success'" 
+               [class.loading]="progress['players'] === 'loading'" 
+               [class.error]="progress['players'] === 'error'">
+            <span class="icon">{{ getStatusIcon(progress['players']) }}</span>
+            <span class="label">Jugadores</span>
+            <mat-progress-bar *ngIf="progress['players'] === 'loading'" mode="indeterminate"></mat-progress-bar>
+          </div>
+
+          <div class="status-item" [class.success]="progress['users'] === 'success'" 
+               [class.loading]="progress['users'] === 'loading'" 
+               [class.error]="progress['users'] === 'error'">
+            <span class="icon">{{ getStatusIcon(progress['users']) }}</span>
+            <span class="label">Usuarios</span>
+            <mat-progress-bar *ngIf="progress['users'] === 'loading'" mode="indeterminate"></mat-progress-bar>
+          </div>
+
+          <div class="status-item" [class.success]="progress['events'] === 'success'" 
+               [class.loading]="progress['events'] === 'loading'" 
+               [class.error]="progress['events'] === 'error'">
+            <span class="icon">{{ getStatusIcon(progress['events']) }}</span>
+            <span class="label">Eventos</span>
+            <mat-progress-bar *ngIf="progress['events'] === 'loading'" mode="indeterminate"></mat-progress-bar>
+          </div>
+        </div>
+      </section>
+
+      <!-- Información -->
+      <section class="info">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>📋 Credenciales de Prueba</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="credentials">
+              <div class="cred">
+                <strong>Admin:</strong>
+                <p>Email: admin&#64;admadriadsur.es</p>
+                <p>Role: admin</p>
+              </div>
+              <div class="cred">
+                <strong>Coach 1:</strong>
+                <p>Email: coach1&#64;admadriadsur.es</p>
+                <p>Role: coach</p>
+              </div>
+              <div class="cred">
+                <strong>Coach 2:</strong>
+                <p>Email: coach2&#64;admadriadsur.es</p>
+                <p>Role: coach</p>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>⚽ Datos de Ejemplo</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="seed-info">
+              <p><strong>Equipos:</strong> Benjamín A, Alevín A, Infantil A</p>
+              <p><strong>Jugadores:</strong> 5 por equipo (nombres españoles)</p>
+              <p><strong>Usuarios:</strong> 1 admin + 2 coaches</p>
+              <p><strong>Eventos:</strong> 10 eventos de ejemplo (goles, tarjetas)</p>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>⚠️ Advertencias</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="warnings">
+              <p>⚠️ Este componente es SOLO para desarrollo</p>
+              <p>⚠️ No usar en producción</p>
+              <p>⚠️ Los datos se cargarán directamente en Firestore</p>
+              <p>⚠️ Asegúrate de tener las colecciones vacías antes de cargar</p>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </section>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="loadAllSeedData()" 
+              [disabled]="isLoading"
+              class="action-button">
+        <mat-icon *ngIf="!isLoading">cloud_upload</mat-icon>
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        {{ isLoading ? 'Cargando...' : '🌱 Cargar Todos los Datos' }}
+      </button>
+
+      <button mat-stroked-button (click)="verifyData()" 
+              [disabled]="isLoading"
+              class="action-button">
+        <mat-icon>verify_user</mat-icon>
+        Verificar Datos
+      </button>
+
+      <button mat-button (click)="clearAllData()" 
+              [disabled]="isLoading"
+              class="danger-button">
+        <mat-icon>delete_sweep</mat-icon>
+        Limpiar Datos
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Para más información, consulta la documentación en TESTING.md</p>
+  </div>
+</div>

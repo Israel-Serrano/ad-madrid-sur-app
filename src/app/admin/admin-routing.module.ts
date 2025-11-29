@@ -4,6 +4,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { ManageTeamsComponent } from './manage-teams/manage-teams.component';
 import { ManagePlayersComponent } from './manage-players/manage-players.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { LoadSeedComponent } from '../core/helpers/load-seed.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,7 @@ const routes: Routes = [
       { path: 'teams', component: ManageTeamsComponent },
       { path: 'players', component: ManagePlayersComponent },
       { path: 'users', component: ManageUsersComponent },
+      { path: 'load-seed', component: LoadSeedComponent },
       // other admin routes can be added here
       { path: '', redirectTo: 'teams', pathMatch: 'full' }
     ]
