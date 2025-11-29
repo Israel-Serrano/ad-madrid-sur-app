@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
+import { CoreModule } from '../core/core.module';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ManageTeamsComponent } from './manage-teams/manage-teams.component';
 import { TeamFormComponent } from './team-form/team-form.component';
@@ -46,6 +47,7 @@ import { MatAccordion } from '@angular/material/expansion';
   ],
   imports: [
     CommonModule,
+    CoreModule,
     AdminRoutingModule,
     ReactiveFormsModule,
     MatTableModule,

@@ -4,6 +4,7 @@ import { CoachRoutingModule } from './coach-routing.module';
 import { CoachDashboardComponent } from './coach-dashboard/coach-dashboard.component';
 import { MyTeamsComponent } from './my-teams/my-teams.component';
 import { LogEventComponent } from './log-event/log-event.component';
+import { HasRoleDirective } from '../core/directives/has-role.directive';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -25,7 +26,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   declarations: [
     CoachDashboardComponent,
     MyTeamsComponent,
-    LogEventComponent
+    LogEventComponent,
+    HasRoleDirective
   ],
   imports: [
     CommonModule,
