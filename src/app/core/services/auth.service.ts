@@ -16,14 +16,45 @@ export class AuthService {
     this.currentUser$ = new Observable(subscriber => {
       onAuthStateChanged(auth, async (firebaseUser: FirebaseAuthUser | null) => {
         if (firebaseUser) {
-          const userDoc = doc(this.firestore, `users/${firebaseUser.uid}`);
-          const userSnap = await getDoc(userDoc);
-          if (userSnap.exists()) {
-            subscriber.next({ uid: firebaseUser.uid, ...userSnap.data() } as User);
-          } else {
-            // User exists in Auth but not in Firestore users collection
-            // This could be an error state or you might want to create a default user profile
-            subscriber.next(null); 
+          try {
+            const userDoc = doc(this.firestore, `users/${firebaseUser.uid}`);
+            const userSnap = await getDoc(userDoc);
+            
+            if (userSnap.exists()) {
+              // User exists in Firestore with full profile
+              subscriber.next({ uid: firebaseUser.uid, ...userSnap.data() } as User);
+            } else {
+              // User exists in Auth but not in Firestore users collection
+              // Determine role from email pattern
+              let role: 'admin' | 'coach' = 'coach';
+              const email = firebaseUser.email || '';
+              
+              if (email.includes('admin@')) {
+                role = 'admin';
+              }
+              
+              // Create a temporary user object with basic info
+              subscriber.next({
+                uid: firebaseUser.uid,
+                email: firebaseUser.email || '',
+                displayName: firebaseUser.displayName || 'Usuario',
+                role: role
+              } as User);
+            }
+          } catch (error) {
+            console.error('Error fetching user from Firestore:', error);
+            // On error, create minimal user object to prevent infinite loading
+            let role: 'admin' | 'coach' = 'coach';
+            const email = firebaseUser.email || '';
+            if (email.includes('admin@')) {
+              role = 'admin';
+            }
+            subscriber.next({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email || '',
+              displayName: firebaseUser.displayName || 'Usuario',
+              role: role
+            } as User);
           }
         } else {
           subscriber.next(null);
