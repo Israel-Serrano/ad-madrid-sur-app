@@ -42,27 +42,37 @@ export class LoadSeedComponent implements OnInit {
     if (this.isLoading) return;
     
     this.isLoading = true;
+    console.log('🌱 Iniciando carga de seed data...');
     
     try {
       // 1. Cargar teams
+      console.log('📦 Cargando equipos...');
       await this.loadTeams();
+      console.log('✅ Equipos cargados');
       
       // 2. Cargar players
+      console.log('👥 Cargando jugadores...');
       await this.loadPlayers();
+      console.log('✅ Jugadores cargados');
       
       // 3. Cargar users
+      console.log('👤 Cargando usuarios...');
       await this.loadUsers();
+      console.log('✅ Usuarios cargados');
       
       // 4. Cargar events
+      console.log('⚽ Cargando eventos...');
       await this.loadEvents();
+      console.log('✅ Eventos cargados');
       
+      console.log('✅ ¡COMPLETADO! Todos los datos cargados correctamente');
       this.snackBar.open('✅ Todos los datos cargados correctamente', 'Cerrar', { 
         duration: 5000,
         panelClass: ['success-snackbar']
       });
       
     } catch (error) {
-      console.error('Error loading seed data:', error);
+      console.error('❌ Error loading seed data:', error);
       this.snackBar.open('❌ Error al cargar datos: ' + error, 'Cerrar', { 
         duration: 5000,
         panelClass: ['error-snackbar']
@@ -78,16 +88,22 @@ export class LoadSeedComponent implements OnInit {
   private async loadTeams(): Promise<void> {
     try {
       this.progress['teams'] = 'loading';
+      console.log(`  📦 Creando ${SEED_TEAMS.length} equipos...`);
       
       for (const team of SEED_TEAMS) {
-        await this.teamService.createTeam({
-          name: team.name,
-          category: team.category,
-          players: [],
-          coachId: team.coachId,
-          createdAt: new Date(),
-          season: team.season
-        } as any);
+        try {
+          const result = await this.teamService.createTeam({
+            name: team.name,
+            category: team.category,
+            players: [],
+            coachId: team.coachId,
+            createdAt: new Date(),
+            season: team.season
+          } as any);
+          console.log(`    ✓ Equipo creado: ${team.name} (${result.id})`);
+        } catch (err) {
+          console.error(`    ✗ Error al crear equipo ${team.name}:`, err);
+        }
       }
       
       this.progress['teams'] = 'success';
@@ -103,19 +119,25 @@ export class LoadSeedComponent implements OnInit {
   private async loadPlayers(): Promise<void> {
     try {
       this.progress['players'] = 'loading';
+      console.log(`  👥 Creando ${SEED_PLAYERS.length} jugadores...`);
       
       for (const player of SEED_PLAYERS) {
-        await this.playerService.createPlayer({
-          name: player.name,
-          teamId: player.teamId,
-          number: player.number,
-          position: player.position,
-          goals: player.goals,
-          assists: player.assists,
-          yellowCards: player.yellowCards,
-          redCards: player.redCards,
-          createdAt: new Date()
-        } as any);
+        try {
+          const result = await this.playerService.createPlayer({
+            name: player.name,
+            teamId: player.teamId,
+            number: player.number,
+            position: player.position,
+            goals: player.goals,
+            assists: player.assists,
+            yellowCards: player.yellowCards,
+            redCards: player.redCards,
+            createdAt: new Date()
+          } as any);
+          console.log(`    ✓ Jugador creado: ${player.name} #${player.number}`);
+        } catch (err) {
+          console.error(`    ✗ Error al crear jugador ${player.name}:`, err);
+        }
       }
       
       this.progress['players'] = 'success';
@@ -131,15 +153,21 @@ export class LoadSeedComponent implements OnInit {
   private async loadUsers(): Promise<void> {
     try {
       this.progress['users'] = 'loading';
+      console.log(`  👤 Creando ${SEED_USERS.length} usuarios...`);
       
       for (const user of SEED_USERS) {
-        await this.userService.createUser({
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          createdAt: new Date(),
-          lastLogin: new Date()
-        } as any);
+        try {
+          const result = await this.userService.createUser({
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            createdAt: new Date(),
+            lastLogin: new Date()
+          } as any);
+          console.log(`    ✓ Usuario creado: ${user.email} (${user.role})`);
+        } catch (err) {
+          console.error(`    ✗ Error al crear usuario ${user.email}:`, err);
+        }
       }
       
       this.progress['users'] = 'success';
@@ -155,17 +183,23 @@ export class LoadSeedComponent implements OnInit {
   private async loadEvents(): Promise<void> {
     try {
       this.progress['events'] = 'loading';
+      console.log(`  ⚽ Creando ${SEED_EVENTS.length} eventos...`);
       
       for (const event of SEED_EVENTS) {
-        await this.eventService.createEvent({
-          matchId: event.matchId,
-          teamId: event.teamId,
-          playerId: event.playerId,
-          type: event.type,
-          minute: event.minute,
-          matchDate: event.matchDate,
-          assistantPlayerId: event.assistantPlayerId
-        } as any);
+        try {
+          const result = await this.eventService.createEvent({
+            matchId: event.matchId,
+            teamId: event.teamId,
+            playerId: event.playerId,
+            type: event.type,
+            minute: event.minute,
+            matchDate: event.matchDate,
+            assistantPlayerId: event.assistantPlayerId
+          } as any);
+          console.log(`    ✓ Evento creado: ${event.type} en minuto ${event.minute}`);
+        } catch (err) {
+          console.error(`    ✗ Error al crear evento:`, err);
+        }
       }
       
       this.progress['events'] = 'success';
