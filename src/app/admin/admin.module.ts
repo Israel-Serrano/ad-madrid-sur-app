@@ -11,7 +11,7 @@ import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { LoadSeedComponent } from '../core/helpers/load-seed.component';
-import { HasRoleDirective } from '../core/directives/has-role.directive';
+import { SharedModule } from '../shared/shared.module';
 
 // Material Imports
 import { MatTableModule } from '@angular/material/table';
@@ -43,11 +43,11 @@ import { MatAccordion } from '@angular/material/expansion';
     ManageUsersComponent,
     UserFormComponent,
     ConfirmDialogComponent,
-    LoadSeedComponent,
-    HasRoleDirective
+    LoadSeedComponent
   ],
   imports: [
     CommonModule,
+    SharedModule,
     AdminRoutingModule,
     ReactiveFormsModule,
     MatTableModule,
