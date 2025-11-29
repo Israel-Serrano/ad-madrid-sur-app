@@ -1,2 +1,20 @@
-node_modules
-package-lock.json
+# /node_modules
+# /dist
+# /npm-debug.log*
+# /package-lock.json
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Misc
+.env
+.DS_Store
+
+# Angular
+/.angular/
+/node_modules
+/package-lock.json
