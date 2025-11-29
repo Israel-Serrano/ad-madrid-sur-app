@@ -13,6 +13,7 @@
 ### Paso 1: Login como Admin
 ```
 Email: admin@admadriadsur.es
+Contraseña: Admin@123
 Rol: admin
 ```
 
@@ -48,15 +49,18 @@ https://console.firebase.google.com
 ```
 Admin:
   Email: admin@admadriadsur.es
+  Contraseña: Admin@123
   Rol: admin
 
 Coach 1:
   Email: coach1@admadriadsur.es
+  Contraseña: Coach@123
   Rol: coach
   Equipos: Benjamín A, Infantil A
 
 Coach 2:
   Email: coach2@admadriadsur.es
+  Contraseña: Coach@123
   Rol: coach
   Equipos: Alevín A
 ```
