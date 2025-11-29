@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signOut, onAuthStateChanged, User as FirebaseAuthUser } from '@angular/fire/auth';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
-import { Observable, from, of } from 'rxjs';
-import { switchMap, shareReplay, catchError } from 'rxjs/operators';
+import { Observable, from, of, BehaviorSubject } from 'rxjs';
+import { switchMap, shareReplay, catchError, map } from 'rxjs/operators';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -10,54 +10,42 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
   
+  private authUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$: Observable<User | null>;
 
   constructor(private auth: Auth, private firestore: Firestore) {
-    this.currentUser$ = from(new Promise<FirebaseAuthUser | null>(resolve => {
-      // Set a timeout to prevent hanging forever
-      const timeoutId = setTimeout(() => resolve(null), 10000);
+    // Set up auth state listener
+    onAuthStateChanged(this.auth, async (firebaseUser: FirebaseAuthUser | null) => {
+      console.log('🔐 Auth state changed:', firebaseUser?.email || 'logged out');
       
-      onAuthStateChanged(this.auth, (firebaseUser: FirebaseAuthUser | null) => {
-        clearTimeout(timeoutId);
-        resolve(firebaseUser);
-      });
-    })).pipe(
-      switchMap(firebaseUser => {
-        if (!firebaseUser) {
-          return of(null);
+      if (firebaseUser) {
+        try {
+          // Try to get user from Firestore
+          const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+          const userSnap = await Promise.race([
+            getDoc(userDocRef),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+          ]);
+          
+          const userData = (userSnap as any).data();
+          if (userData) {
+            console.log('✅ User found in Firestore:', userData.email);
+            this.authUserSubject.next({ uid: firebaseUser.uid, ...userData } as User);
+          } else {
+            console.log('⚠️ User not in Firestore, using fallback');
+            this.authUserSubject.next(this.createFallbackUser(firebaseUser));
+          }
+        } catch (error) {
+          console.warn('⚠️ Error fetching from Firestore, using fallback:', error);
+          this.authUserSubject.next(this.createFallbackUser(firebaseUser));
         }
-        
-        // Try to get user from Firestore, but with a quick fallback
-        return from(this.getUserWithTimeout(firebaseUser)).pipe(
-          catchError(error => {
-            console.warn('Error fetching user from Firestore, using fallback:', error);
-            // Return fallback user based on email
-            return of(this.createFallbackUser(firebaseUser));
-          })
-        );
-      }),
-      shareReplay(1)
-    );
-  }
-
-  /**
-   * Get user from Firestore with timeout
-   */
-  private async getUserWithTimeout(firebaseUser: FirebaseAuthUser): Promise<User | null> {
-    try {
-      const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
-      const userSnap = await getDoc(userDocRef);
-      
-      if (userSnap.exists()) {
-        return { uid: firebaseUser.uid, ...userSnap.data() } as User;
+      } else {
+        console.log('🚪 User logged out');
+        this.authUserSubject.next(null);
       }
-      
-      // User doesn't exist in Firestore, return fallback
-      return this.createFallbackUser(firebaseUser);
-    } catch (error) {
-      console.error('Error fetching user from Firestore:', error);
-      return this.createFallbackUser(firebaseUser);
-    }
+    });
+    
+    this.currentUser$ = this.authUserSubject.asObservable().pipe(shareReplay(1));
   }
 
   /**
@@ -71,6 +59,8 @@ export class AuthService {
       role = 'admin';
     }
     
+    console.log(`👤 Fallback user: ${email} (${role})`);
+    
     return {
       uid: firebaseUser.uid,
       email: email,
@@ -80,10 +70,12 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
+    console.log('🔑 Logging in:', email);
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
   logout() {
+    console.log('🚪 Logging out');
     return signOut(this.auth);
   }
 }

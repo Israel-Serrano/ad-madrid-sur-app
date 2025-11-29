@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { take, timeout } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -35,39 +35,41 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
 
     try {
+      console.log('🔐 Starting login for:', email);
       await this.authService.login(email, password);
+      console.log('✅ Auth successful, waiting for user profile...');
       
-      // Get current user and redirect based on role (with timeout)
-      this.authService.currentUser$.pipe(
-        take(1),
-        timeout(5000) // Wait max 5 seconds
-      ).subscribe(
+      // Get current user and redirect based on role
+      this.authService.currentUser$.pipe(take(1)).subscribe(
         user => {
+          console.log('👤 User profile received:', user);
           if (user) {
             if (user.role === 'admin') {
+              console.log('→ Redirecting to admin');
               this.router.navigate(['/admin']);
             } else if (user.role === 'coach') {
+              console.log('→ Redirecting to coach');
               this.router.navigate(['/coach']);
             } else {
-              // Fallback for unknown roles
+              console.log('→ Redirecting to public');
               this.router.navigate(['/public']);
             }
           } else {
+            console.error('❌ No user profile found');
             this.errorMessage = 'No se pudo cargar el perfil de usuario.';
           }
           this.loading = false;
         },
-        (error: any) => {
-          console.error('Error waiting for user:', error);
-          this.errorMessage = 'Timeout al cargar el usuario. Recargando...';
+        error => {
+          console.error('❌ Error:', error);
+          this.errorMessage = 'Error al cargar el perfil. Intenta de nuevo.';
           this.loading = false;
-          setTimeout(() => location.reload(), 1500);
         }
       );
     } catch (error: any) {
+      console.error('❌ Login error:', error);
       this.errorMessage = 'Inicio de sesión fallido. Verifica tus credenciales.';
       this.loading = false;
-      console.error(error);
     }
   }
 }
