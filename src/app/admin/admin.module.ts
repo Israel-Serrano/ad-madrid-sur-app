@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
-import { CoreModule } from '../core/core.module';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ManageTeamsComponent } from './manage-teams/manage-teams.component';
 import { TeamFormComponent } from './team-form/team-form.component';
@@ -12,6 +11,7 @@ import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { LoadSeedComponent } from '../core/helpers/load-seed.component';
+import { HasRoleDirective } from '../core/directives/has-role.directive';
 
 // Material Imports
 import { MatTableModule } from '@angular/material/table';
@@ -43,11 +43,11 @@ import { MatAccordion } from '@angular/material/expansion';
     ManageUsersComponent,
     UserFormComponent,
     ConfirmDialogComponent,
-    LoadSeedComponent
+    LoadSeedComponent,
+    HasRoleDirective
   ],
   imports: [
     CommonModule,
-    CoreModule,
     AdminRoutingModule,
     ReactiveFormsModule,
     MatTableModule,
