@@ -18,3 +18,7 @@
 /.angular/
 /node_modules
 /package-lock.json
+
+# Environment files
+src/environments/environment.ts
+src/environments/environment.prod.ts
