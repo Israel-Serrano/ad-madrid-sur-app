@@ -14,6 +14,16 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Coaches</mat-label>
+    <mat-select formControlName="coachIds" multiple>
+      <mat-option *ngFor="let coach of coaches$ | async" [value]="coach.uid">
+        {{ coach.displayName }}
+      </mat-option>
+    </mat-select>
+    <mat-hint>Assign one or more coaches</mat-hint>
+  </mat-form-field>
 </div>
 
 <div mat-dialog-actions>

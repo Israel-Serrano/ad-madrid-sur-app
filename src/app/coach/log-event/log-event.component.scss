@@ -1,0 +1,159 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.events-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.adms-header {
+  background: linear-gradient(135deg, var(--adms-primary-blue, #003d82) 0%, var(--adms-primary-blue-light, #1e5a96) 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 8px 8px 0 0;
+  margin: -16px -16px 16px -16px;
+
+  mat-card-title {
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  mat-card-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+mat-form-field {
+  mat-label {
+    font-weight: 500;
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: flex-start;
+
+  button {
+    flex: 1;
+    max-width: 200px;
+    height: 48px;
+    font-size: 1rem;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+mat-list {
+  padding: 0;
+
+  mat-list-item {
+    height: auto;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    mat-icon {
+      margin-right: 16px;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+
+      &.event-icon-goal {
+        color: var(--adms-primary-blue, #003d82);
+      }
+
+      &.event-icon-assist {
+        color: var(--adms-secondary-orange, #ff6b35);
+      }
+
+      &.event-icon-yellow-card {
+        color: #fbc02d;
+      }
+
+      &.event-icon-red-card {
+        color: var(--adms-accent-red, #d32f2f);
+      }
+    }
+
+    [matListItemTitle] {
+      font-weight: 600;
+      color: var(--adms-gray-dark, #424242);
+    }
+
+    [matListItemLine] {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.clear-events {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .button-group {
+    flex-direction: column;
+
+    button {
+      max-width: 100%;
+    }
+  }
+
+  .full-width {
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .adms-header {
+    margin: -12px -12px 12px -12px;
+  }
+
+  mat-form-field {
+    font-size: 0.9rem;
+  }
+
+  .button-group button {
+    font-size: 0.9rem;
+    height: 44px;
+  }
+}

@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="user-form">
+    <mat-form-field appearance="fill">
+      <mat-label>Display Name</mat-label>
+      <input matInput formControlName="displayName" required>
+      <mat-error *ngIf="form.get('displayName')?.hasError('required')">Name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required [readonly]="isEditMode">
+      <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email format</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role" required>
+        <mat-option *ngFor="let role of roles" [value]="role">
+          {{ role | titlecase }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('role')?.hasError('required')">Role is required</mat-error>
+    </mat-form-field>
+
+    <div *ngIf="!isEditMode" class="form-note">
+      <p>
+        <mat-icon>info</mat-icon> 
+        A password will be handled by the user upon first login. An authentication account must be created separately.
+      </p>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSave()">
+    {{ isEditMode ? 'Update' : 'Create' }}
+  </button>
+</mat-dialog-actions>

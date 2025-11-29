@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Player } from '../../core/models/player.model';
 import { Team } from '../../core/models/team.model';
-import { TeamService } from '../../core/services/team.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -18,21 +17,32 @@ export class PlayerFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<PlayerFormComponent>,
-    private teamService: TeamService,
-    @Inject(MAT_DIALOG_DATA) public data: { player?: Player }
+    @Inject(MAT_DIALOG_DATA) public data: { player?: Player; teamId?: string; teams$: Observable<Team[]> }
   ) { }
 
   ngOnInit(): void {
-    this.teams$ = this.teamService.getTeams();
+    this.teams$ = this.data.teams$;
     this.form = this.fb.group({
       name: [this.data?.player?.name || '', Validators.required],
-      teamId: [this.data?.player?.teamId || '', Validators.required]
+      dorsal: [this.data?.player?.dorsal || ''],
+      teamId: [{ value: this.data?.teamId || this.data?.player?.teamId || '', disabled: !!this.data?.teamId }, Validators.required]
     });
   }
 
   save() {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value);
+      let formData = this.form.getRawValue(); // Use getRawValue to get disabled fields
+      // If we are creating a new player, initialize their stats
+      if (!this.data.player) {
+        formData = {
+          ...formData,
+          goals: 0,
+          assists: 0,
+          yellowCards: 0,
+          redCards: 0
+        };
+      }
+      this.dialogRef.close(formData);
     }
   }
 

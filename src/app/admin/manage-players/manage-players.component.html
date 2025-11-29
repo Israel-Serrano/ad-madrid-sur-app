@@ -11,10 +11,16 @@
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
 
-  <!-- Team Column -->
-  <ng-container matColumnDef="teamId">
-    <th mat-header-cell *matHeaderCellDef> Team ID </th>
-    <td mat-cell *matCellDef="let element"> {{element.teamId}} </td>
+  <!-- Team Name Column -->
+  <ng-container matColumnDef="teamName">
+    <th mat-header-cell *matHeaderCellDef> Team </th>
+    <td mat-cell *matCellDef="let element"> {{ getTeamName(element.teamId) }} </td>
+  </ng-container>
+
+  <!-- Goals Column -->
+  <ng-container matColumnDef="goals">
+    <th mat-header-cell *matHeaderCellDef> Goals </th>
+    <td mat-cell *matCellDef="let element"> {{element.goals}} </td>
   </ng-container>
 
   <!-- Actions Column -->

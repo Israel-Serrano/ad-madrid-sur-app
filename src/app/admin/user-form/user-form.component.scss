@@ -1,0 +1,20 @@
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  color: grey;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.form-note mat-icon {
+  font-size: 1.2em;
+}

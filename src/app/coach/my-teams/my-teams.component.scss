@@ -1,0 +1,31 @@
+.container {
+  margin: 20px;
+  padding: 20px;
+}
+
+.team-content {
+  padding: 15px 0;
+}
+
+.team-actions {
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+}
+
+.no-teams, .no-players {
+    padding: 20px;
+    text-align: center;
+    color: #888;
+}
+
+mat-panel-title, mat-panel-description {
+    flex-basis: 0;
+}
+
+mat-panel-description {
+    justify-content: space-between;
+    align-items: center;
+}

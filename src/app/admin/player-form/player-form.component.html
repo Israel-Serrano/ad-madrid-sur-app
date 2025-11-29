@@ -1,19 +1,43 @@
 <h1 mat-dialog-title>{{ data.player ? 'Edit Player' : 'Create Player' }}</h1>
 
 <div mat-dialog-content [formGroup]="form">
-  <mat-form-field appearance="fill">
-    <mat-label>Player Name</mat-label>
-    <input matInput formControlName="name">
-  </mat-form-field>
 
   <mat-form-field appearance="fill">
-    <mat-label>Team</mat-label>
-    <mat-select formControlName="teamId">
-      <mat-option *ngFor="let team of teams$ | async" [value]="team.id">
-        {{ team.name }}
-      </mat-option>
-    </mat-select>
+
+    <mat-label>Player Name</mat-label>
+
+    <input matInput formControlName="name">
+
   </mat-form-field>
+
+
+
+  <mat-form-field appearance="fill">
+
+    <mat-label>Dorsal</mat-label>
+
+    <input matInput type="number" formControlName="dorsal">
+
+  </mat-form-field>
+
+
+
+  <mat-form-field appearance="fill">
+
+    <mat-label>Team</mat-label>
+
+    <mat-select formControlName="teamId">
+
+      <mat-option *ngFor="let team of teams$ | async" [value]="team.id">
+
+        {{ team.name }}
+
+      </mat-option>
+
+    </mat-select>
+
+  </mat-form-field>
+
 </div>
 
 <div mat-dialog-actions>

@@ -8,14 +8,18 @@
 // Be sure that you only ever include this mixin once!
 @include mat.core();
 
+// Define custom colors for AD Madrid Sur based on corporate identity
+// Primary: Deep Blue (representing football/professionalism)
+// Accent: Vibrant Orange/Red (energy and passion)
+// Warn: Red (warnings and alerts)
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$ad-madrid-sur-app-primary: mat.define-palette(mat.$indigo-palette);
-$ad-madrid-sur-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+// Using blue for primary (corporate color) and orange for accent (dynamic/energy)
+$ad-madrid-sur-app-primary: mat.define-palette(mat.$blue-palette, 900, 600, 800);
+$ad-madrid-sur-app-accent: mat.define-palette(mat.$orange-palette, 600, 400, 800);
 
 // The warn palette is optional (defaults to red).
-$ad-madrid-sur-app-warn: mat.define-palette(mat.$red-palette);
+$ad-madrid-sur-app-warn: mat.define-palette(mat.$red-palette, 600, 400, 800);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
@@ -32,7 +36,63 @@ $ad-madrid-sur-app-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($ad-madrid-sur-app-theme);
 
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles - AD Madrid Sur Brand */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { 
+  height: 100%; 
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Custom brand colors for AD Madrid Sur */
+:root {
+  /* Primary Blue - Professional & Trust */
+  --adms-primary-blue: #003d82;
+  --adms-primary-blue-light: #1e5a96;
+  
+  /* Secondary Orange - Energy & Passion */
+  --adms-secondary-orange: #ff6b35;
+  --adms-secondary-orange-light: #ff8555;
+  
+  /* Neutral Colors */
+  --adms-white: #ffffff;
+  --adms-gray-light: #f5f5f5;
+  --adms-gray-medium: #e0e0e0;
+  --adms-gray-dark: #424242;
+  
+  /* Accent Red - Football Spirit */
+  --adms-accent-red: #d32f2f;
+}
+
+/* Utility Classes */
+.adms-primary-text {
+  color: var(--adms-primary-blue);
+  font-weight: 500;
+}
+
+.adms-accent-text {
+  color: var(--adms-secondary-orange);
+  font-weight: 600;
+}
+
+.adms-card {
+  background-color: var(--adms-white);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+.adms-header {
+  background: linear-gradient(135deg, var(--adms-primary-blue) 0%, var(--adms-primary-blue-light) 100%);
+  color: var(--adms-white);
+  padding: 16px 24px;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  html, body {
+    font-size: 14px;
+  }
+}

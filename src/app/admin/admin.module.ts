@@ -8,6 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ManagePlayersComponent } from './manage-players/manage-players.component';
 import { PlayerFormComponent } from './player-form/player-form.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 // Material Imports
 import { MatTableModule } from '@angular/material/table';
@@ -20,6 +22,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -29,7 +33,9 @@ import { MatListModule } from '@angular/material/list';
     TeamFormComponent,
     ManagePlayersComponent,
     PlayerFormComponent,
-    ManageUsersComponent
+    ManageUsersComponent,
+    UserFormComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     CommonModule,
@@ -44,7 +50,9 @@ import { MatListModule } from '@angular/material/list';
     MatSelectModule,
     MatSidenavModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    MatSnackBarModule,
+    MatTooltipModule
   ]
 })
 export class AdminModule { }

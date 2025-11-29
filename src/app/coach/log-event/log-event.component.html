@@ -1,0 +1,115 @@
+<div class="container">
+  <mat-card class="form-card">
+    <mat-card-header class="adms-header">
+      <mat-card-title>Registrar Evento de Partido</mat-card-title>
+      <mat-card-subtitle>Registra en tiempo real los eventos de tu partido</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Team Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Equipo</mat-label>
+          <mat-select formControlName="teamId" required>
+            <mat-option *ngFor="let team of teams$ | async" [value]="team.id">
+              {{ team.name }} ({{ team.category }})
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('teamId')?.hasError('required')">
+            Debes seleccionar un equipo
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Player Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Jugador</mat-label>
+          <mat-select formControlName="playerId" required [disabled]="!selectedTeamId">
+            <mat-option *ngFor="let player of players$ | async" [value]="player.id">
+              #{{ player.dorsal || '?' }} - {{ player.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('playerId')?.hasError('required')">
+            Debes seleccionar un jugador
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Event Type -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Evento</mat-label>
+          <mat-select formControlName="eventType" required (selectionChange)="onEventTypeChange()">
+            <mat-option *ngFor="let type of eventTypes" [value]="type">
+              {{ type === 'Goal' ? '⚽ Gol' : type === 'Assist' ? '🎯 Asistencia' : type === 'Yellow Card' ? '🟨 Tarjeta Amarilla' : '🟥 Tarjeta Roja' }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('eventType')?.hasError('required')">
+            Debes seleccionar un tipo de evento
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Minute -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Minuto</mat-label>
+          <input matInput type="number" formControlName="minute" min="0" max="120" required>
+          <mat-error *ngIf="form.get('minute')?.hasError('required')">
+            Debes indicar el minuto
+          </mat-error>
+          <mat-error *ngIf="form.get('minute')?.hasError('min') || form.get('minute')?.hasError('max')">
+            El minuto debe estar entre 0 y 120
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Assistant Player (for Goals) -->
+        <mat-form-field appearance="outline" class="full-width" *ngIf="form.get('eventType')?.value === 'Goal'">
+          <mat-label>Asistencia (opcional)</mat-label>
+          <mat-select formControlName="assistantPlayerId">
+            <mat-option [value]="null">Sin asistencia</mat-option>
+            <mat-option *ngFor="let player of players$ | async" [value]="player.id">
+              #{{ player.dorsal || '?' }} - {{ player.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <div class="button-group">
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+            <mat-icon>check_circle</mat-icon>
+            Registrar Evento
+          </button>
+          <button mat-stroked-button type="button" (click)="form.reset(); selectedTeamId = ''">
+            <mat-icon>refresh</mat-icon>
+            Limpiar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Recent Events Display -->
+  <mat-card class="events-card" *ngIf="recentEvents.length > 0">
+    <mat-card-header class="adms-header">
+      <mat-card-title>Eventos Recientes</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item *ngFor="let event of recentEvents; let i = index">
+          <mat-icon matListItemIcon [ngClass]="'event-icon-' + event.type.toLowerCase().replace(' ', '-')">
+            {{ event.type === 'Goal' ? 'sports_soccer' : event.type === 'Assist' ? 'touch_app' : event.type === 'Yellow Card' ? 'warning' : 'cancel' }}
+          </mat-icon>
+          <div matListItemTitle>{{ event.type }}</div>
+          <div matListItemLine>Min {{ event.minute }} - Jugador #{{ event.playerId }}</div>
+          <button mat-icon-button matListItemMeta (click)="recentEvents.splice(i, 1)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+      
+      <div class="clear-events">
+        <button mat-button color="warn" (click)="clearRecentEvents()">
+          <mat-icon>delete_sweep</mat-icon>
+          Limpiar Historial
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

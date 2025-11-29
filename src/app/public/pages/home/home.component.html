@@ -1,0 +1,126 @@
+<!-- Página principal pública - AD Madrid Sur -->
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>AD Madrid Sur</h1>
+      <p>Tu escuela de fútbol y tenis</p>
+    </div>
+  </section>
+
+  <!-- Teams Events Section -->
+  <section class="teams-events-section">
+    <h2>📊 Eventos en Vivo</h2>
+    
+    <ng-container *ngIf="(events$ | async) as events; else noEvents">
+      <div class="teams-grid" *ngIf="teams$ | async as teams">
+        <mat-card *ngFor="let team of teams" class="team-card">
+          <mat-card-header>
+            <mat-card-title>{{ team.name }}</mat-card-title>
+            <mat-card-subtitle>{{ team.category }}</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="events-container">
+              <!-- Goals -->
+              <div class="event-group" *ngIf="getTeamEvents(events, team.id, 'Goal').length > 0">
+                <h3>⚽ Goles</h3>
+                <div *ngFor="let event of getTeamEvents(events, team.id, 'Goal')" class="event-item">
+                  <span class="event-player">{{ getPlayerName(event.playerId) }}</span>
+                  <span class="event-minute">{{ event.minute }}'</span>
+                  <span *ngIf="event.assistantPlayerId" class="event-assist">
+                    (Asistencia: {{ getPlayerName(event.assistantPlayerId) }})
+                  </span>
+                </div>
+              </div>
+
+              <!-- Yellow Cards -->
+              <div class="event-group" *ngIf="getTeamEvents(events, team.id, 'Yellow Card').length > 0">
+                <h3>🟨 Tarjetas Amarillas</h3>
+                <div *ngFor="let event of getTeamEvents(events, team.id, 'Yellow Card')" class="event-item warning">
+                  <span class="event-player">{{ getPlayerName(event.playerId) }}</span>
+                  <span class="event-minute">{{ event.minute }}'</span>
+                </div>
+              </div>
+
+              <!-- Red Cards -->
+              <div class="event-group" *ngIf="getTeamEvents(events, team.id, 'Red Card').length > 0">
+                <h3>🔴 Tarjetas Rojas</h3>
+                <div *ngFor="let event of getTeamEvents(events, team.id, 'Red Card')" class="event-item error">
+                  <span class="event-player">{{ getPlayerName(event.playerId) }}</span>
+                  <span class="event-minute">{{ event.minute }}'</span>
+                </div>
+              </div>
+
+              <div *ngIf="getTeamEvents(events, team.id).length === 0" class="no-events">
+                <p>Sin eventos registrados</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </ng-container>
+    <ng-template #noEvents>
+      <p class="loading">Cargando eventos...</p>
+    </ng-template>
+  </section>
+
+  <!-- Leaderboard Section -->
+  <section class="leaderboard-section">
+    <h2>🏆 Clasificación de Goleadores</h2>
+
+    <!-- General Leaderboard -->
+    <mat-card class="leaderboard-card">
+      <mat-card-header>
+        <mat-card-title>Top 10 General</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <ng-container *ngIf="leaderboard$ | async as leaderboard">
+            <mat-list-item *ngFor="let player of leaderboard.overall; let i = index" class="leaderboard-item">
+              <div matListItemTitle class="rank">#{{ i + 1 }}</div>
+              <div class="player-info">
+                <div matListItemTitle>{{ player.playerName }}</div>
+                <div matListItemLine>{{ player.teamName }}</div>
+              </div>
+              <div matListItemMeta class="goal-count">
+                <mat-icon>sports_soccer</mat-icon>
+                <span>{{ player.goals }}</span>
+              </div>
+            </mat-list-item>
+          </ng-container>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- By Category -->
+    <div class="category-leaderboards">
+      <mat-card *ngFor="let category of ['Prebenjamín', 'Benjamín', 'Alevín', 'Infantil', 'Cadete', 'Juvenil']" 
+        class="leaderboard-card category-card">
+        <mat-card-header>
+          <mat-card-title>{{ category }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <ng-container *ngIf="leaderboard$ | async as leaderboard">
+              <mat-list-item *ngFor="let player of leaderboard.byCategory[category]; let i = index" class="leaderboard-item">
+                <div matListItemTitle class="rank">#{{ i + 1 }}</div>
+                <div class="player-info">
+                  <div matListItemTitle>{{ player.playerName }}</div>
+                </div>
+                <div matListItemMeta class="goal-count">
+                  <mat-icon>sports_soccer</mat-icon>
+                  <span>{{ player.goals }}</span>
+                </div>
+              </mat-list-item>
+              <p *ngIf="!leaderboard.byCategory[category] || leaderboard.byCategory[category].length === 0" class="no-players">
+                Sin datos en esta categoría
+              </p>
+            </ng-container>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+</div>
+

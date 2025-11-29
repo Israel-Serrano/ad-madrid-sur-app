@@ -3,11 +3,20 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu</mat-toolbar>
+    <mat-toolbar>Menú</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="teams">Manage Teams</a>
-      <a mat-list-item routerLink="players">Manage Players</a>
-      <a mat-list-item routerLink="users">Manage Users</a>
+      <a mat-list-item routerLink="teams" routerLinkActive="active" *appHasRole="'admin'">
+        <mat-icon matListItemIcon>groups</mat-icon>
+        <span matListItemTitle>Gestionar Equipos</span>
+      </a>
+      <a mat-list-item routerLink="players" routerLinkActive="active" *appHasRole="'admin'">
+        <mat-icon matListItemIcon>sports_soccer</mat-icon>
+        <span matListItemTitle>Gestionar Jugadores</span>
+      </a>
+      <a mat-list-item routerLink="users" routerLinkActive="active" *appHasRole="'admin'">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Gestionar Usuarios</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -20,7 +29,11 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>AD Madrid Sur Admin</span>
+      <span>Panel de Administrador</span>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="logout()" matTooltip="Cerrar sesión">
+        <mat-icon>logout</mat-icon>
+      </button>
     </mat-toolbar>
     <div class="content">
       <router-outlet></router-outlet>
