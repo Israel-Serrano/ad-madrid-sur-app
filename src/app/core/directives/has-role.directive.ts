@@ -17,6 +17,7 @@ import { UserRole } from '../models/user.model';
 export class HasRoleDirective implements OnInit, OnDestroy {
   private roles: UserRole[] = [];
   private subscription: Subscription | null = null;
+  private currentUser: any = null;
 
   @Input()
   set appHasRole(val: UserRole | UserRole[]) {
@@ -31,7 +32,8 @@ export class HasRoleDirective implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.subscription = this.authService.currentUser$.subscribe(() => {
+    this.subscription = this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
       this.updateView();
     });
   }
@@ -43,12 +45,10 @@ export class HasRoleDirective implements OnInit, OnDestroy {
   }
 
   private updateView(): void {
-    this.authService.currentUser$.subscribe(user => {
-      if (user && this.roles.includes(user.role)) {
-        this.viewContainer.createEmbeddedView(this.templateRef);
-      } else {
-        this.viewContainer.clear();
-      }
-    });
+    // Avoid creating multiple embedded views: clear before rendering
+    this.viewContainer.clear();
+    if (this.currentUser && this.roles.includes(this.currentUser.role)) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
+    }
   }
 }
