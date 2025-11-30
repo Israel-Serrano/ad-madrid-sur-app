@@ -1,34 +1,42 @@
-<h2 mat-dialog-title>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar Usuario' : 'Añadir Nuevo Usuario' }}</h2>
 
 <mat-dialog-content>
   <form [formGroup]="form" class="user-form">
     <mat-form-field appearance="fill">
-      <mat-label>Display Name</mat-label>
+      <mat-label>Nombre</mat-label>
       <input matInput formControlName="displayName" required>
-      <mat-error *ngIf="form.get('displayName')?.hasError('required')">Name is required</mat-error>
+      <mat-error *ngIf="form.get('displayName')?.hasError('required')">El nombre es obligatorio</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
+      <mat-label>Correo Electrónico</mat-label>
       <input matInput formControlName="email" type="email" required [readonly]="isEditMode">
-      <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
-      <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email format</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('required')">El correo es obligatorio</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Formato de correo inválido</mat-error>
     </mat-form-field>
     
     <mat-form-field appearance="fill">
-      <mat-label>Role</mat-label>
+      <mat-label>Rol</mat-label>
       <mat-select formControlName="role" required>
         <mat-option *ngFor="let role of roles" [value]="role">
           {{ role | titlecase }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="form.get('role')?.hasError('required')">Role is required</mat-error>
+      <mat-error *ngIf="form.get('role')?.hasError('required')">El rol es obligatorio</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="!isEditMode">
+      <mat-label>Contraseña Temporal</mat-label>
+      <input matInput formControlName="tempPassword" type="password" required>
+      <mat-error *ngIf="form.get('tempPassword')?.hasError('required')">La contraseña es obligatoria</mat-error>
+      <mat-error *ngIf="form.get('tempPassword')?.hasError('minlength')">Mínimo 6 caracteres</mat-error>
+      <mat-hint>Se enviará al usuario para su primer acceso</mat-hint>
     </mat-form-field>
 
     <div *ngIf="!isEditMode" class="form-note">
       <p>
         <mat-icon>info</mat-icon> 
-        A password will be handled by the user upon first login. An authentication account must be created separately.
+        Asigna una contraseña temporal. El usuario podrá cambiarla después del primer acceso.
       </p>
     </div>
 
@@ -36,8 +44,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button (click)="onCancel()">Cancelar</button>
   <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSave()">
-    {{ isEditMode ? 'Update' : 'Create' }}
+    {{ isEditMode ? 'Actualizar' : 'Crear' }}
   </button>
 </mat-dialog-actions>

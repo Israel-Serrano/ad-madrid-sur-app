@@ -23,7 +23,8 @@ export class UserFormComponent implements OnInit {
       uid: [null],
       displayName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
+      tempPassword: [''] // Will be required for new users in ngOnInit
     });
   }
 
@@ -34,8 +35,9 @@ export class UserFormComponent implements OnInit {
       this.form.get('uid')?.disable();
       this.form.get('email')?.disable();
     } else {
-       // For new users, we might need a password field.
-       // Handled by Cloud Function, so we omit it here.
+      // For new users, password is required
+      this.form.get('tempPassword')?.setValidators([Validators.required, Validators.minLength(6)]);
+      this.form.get('tempPassword')?.updateValueAndValidity();
     }
   }
 
